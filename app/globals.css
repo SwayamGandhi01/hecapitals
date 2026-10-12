@@ -1,26 +1,344 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Brand blues — sampled from the HE Capital Markets logo (#385DA8). */
+  --color-brand-50: #f4f7fb;
+  --color-brand-100: #eaf2fc;
+  --color-brand-200: #d4e2f7;
+  --color-brand-300: #a9c2e6;
+  --color-brand-400: #5278b8;
+  --color-brand-500: #385da8;
+  --color-brand-600: #2f4e8f;
+  --color-brand-700: #24407a;
+  --color-brand-800: #17345f;
+  --color-brand-900: #0f2444;
+
+  --color-ink: #1c2b40;
+  /* Chosen so running copy clears WCAG AA (4.5:1) on white and on both
+     pale-blue section backgrounds, not just on white. */
+  --color-body: #5f6d84;
+  --color-line: #dce4ee;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-source-serif), ui-serif, Georgia, serif;
+
+  /* ---------------------------------------------------------------------
+     Type scale. Five display steps and three text steps — everything on the
+     site uses one of these, so sizes stay in proportion at every viewport.
+     --------------------------------------------------------------------- */
+  --text-display: clamp(2.75rem, 1.35rem + 5.1vw, 5.25rem);
+  --text-display--line-height: 1.02;
+  --text-display--letter-spacing: -0.022em;
+
+  --text-h1: clamp(2.25rem, 1.45rem + 2.9vw, 3.75rem);
+  --text-h1--line-height: 1.06;
+  --text-h1--letter-spacing: -0.02em;
+
+  --text-h2: clamp(1.875rem, 1.3rem + 2.1vw, 2.875rem);
+  --text-h2--line-height: 1.12;
+  --text-h2--letter-spacing: -0.016em;
+
+  --text-h3: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+  --text-h3--line-height: 1.22;
+  --text-h3--letter-spacing: -0.012em;
+
+  --text-h4: 1.1875rem;
+  --text-h4--line-height: 1.35;
+  --text-h4--letter-spacing: -0.008em;
+
+  /* Standfirst / intro paragraphs. */
+  --text-lead: clamp(1.0625rem, 1rem + 0.35vw, 1.1875rem);
+  --text-lead--line-height: 1.62;
+
+  /* Default running copy. */
+  --text-body: 1rem;
+  --text-body--line-height: 1.72;
+
+  /* Copy inside cards and sidebars — one step down, never smaller. */
+  --text-card: 0.9375rem;
+  --text-card--line-height: 1.65;
+
+  --text-eyebrow: 0.75rem;
+  --text-eyebrow--line-height: 1;
+  --text-eyebrow--letter-spacing: 0.18em;
+
+  /* Vertical rhythm for full-width sections. */
+  --spacing-section: 5rem;
+  --spacing-section-lg: 7rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background-color: #fff;
+    color: var(--color-body);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-ink);
+    text-wrap: balance;
+  }
+
+  /* Keep paragraphs from ending on a single orphaned word. */
+  p {
+    text-wrap: pretty;
+  }
+
+  /* A single, consistently visible focus ring across the whole site. */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-100);
+    color: var(--color-brand-800);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Page gutter: 16px on phones, widening with the viewport. */
+  .container-page {
+    width: 100%;
+    max-width: 80rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container-page {
+      padding-inline: 3rem;
+    }
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: var(--text-eyebrow);
+    font-weight: 600;
+    letter-spacing: var(--text-eyebrow--letter-spacing);
+    text-transform: uppercase;
+    color: var(--color-brand-500);
+  }
+
+  .eyebrow::after {
+    content: "";
+    width: 2.5rem;
+    height: 1px;
+    background-color: var(--color-brand-300);
+  }
+
+  /* Standard vertical rhythm. Every full-width section uses this, so the
+     page breathes consistently instead of section-by-section guesswork. */
+  .section-y {
+    padding-block: var(--spacing-section);
+  }
+
+  @media (min-width: 1024px) {
+    .section-y {
+      padding-block: var(--spacing-section-lg);
+    }
+  }
+
+  /* Comfortable line length for running copy. Roughly 68 characters. */
+  .measure {
+    max-width: 38rem;
+  }
+
+  .measure-sm {
+    max-width: 30rem;
+  }
+
+  /*
+    Frosted glass, defined once and shared by the floating header, its
+    dropdown panels and the mobile menu. Light and predominantly white with a
+    faint cool tint, a luminous top edge, and a soft blue-tinted lift — legible
+    over both the bright sky and the dark water of the hero image.
+  */
+  .glass-surface {
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.86) 0%,
+      rgba(236, 245, 255, 0.7) 100%
+    );
+    backdrop-filter: blur(24px) saturate(165%);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow:
+      0 10px 36px rgba(23, 52, 95, 0.1),
+      0 2px 8px rgba(23, 52, 95, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  /* Once the page is scrolled the bar sits over ordinary content, so it firms
+     up very slightly rather than changing size or position. */
+  .glass-surface-scrolled {
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(238, 246, 255, 0.82) 100%
+    );
+    box-shadow:
+      0 14px 40px rgba(23, 52, 95, 0.14),
+      0 2px 8px rgba(23, 52, 95, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  /* Dropdowns and the mobile panel carry more copy, so they sit a little more
+     opaque than the bar itself. */
+  .glass-panel {
+    background-image: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 247, 255, 0.9) 100%
+    );
+    backdrop-filter: blur(28px) saturate(170%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+      0 18px 48px rgba(23, 52, 95, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  }
+
+  /* Without backdrop-filter the translucency would make text unreadable, so
+     these fall back to a near-opaque surface. Written as a single condition:
+     the `not (A or B)` form makes the CSS compiler drop the whole block. */
+  @supports not (backdrop-filter: blur(1px)) {
+    .glass-surface,
+    .glass-surface-scrolled {
+      background-image: none;
+      background-color: rgba(249, 251, 255, 0.97);
+    }
+
+    .glass-panel {
+      background-image: none;
+      background-color: #fbfdff;
+    }
+  }
+
+  /*
+    Logo marquee.
+
+    Each track holds the same sequence twice, so translating by exactly -50%
+    lands on a frame identical to the start and the loop is seamless. Spacing
+    comes from a right margin on every item rather than a flex `gap`: with a
+    gap, half the track width would not equal one whole sequence (N items have
+    N-1 gaps) and the loop would jump on every repeat.
+  */
+  @keyframes marquee-rtl {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes marquee-ltr {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  .marquee {
+    overflow: hidden;
+    /* Logos fade in and out at the edges instead of popping. */
+    mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 2.5rem,
+      #000 calc(100% - 2.5rem),
+      transparent 100%
+    );
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation-duration: var(--marquee-duration, 40s);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  .marquee-track-ltr {
+    animation-name: marquee-ltr;
+  }
+
+  .marquee-track-rtl {
+    animation-name: marquee-rtl;
+  }
+
+  /* Long-form body copy shared by every service, sector and location page. */
+  .prose-he > p {
+    margin-bottom: 1.25rem;
+    line-height: var(--text-body--line-height);
+  }
+
+  .prose-he > p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* The first paragraph of a long-form block reads one step larger. */
+  .prose-he > p:first-child {
+    font-size: var(--text-lead);
+    line-height: var(--text-lead--line-height);
+    color: var(--color-ink);
+  }
+}
+
+/* Honour the OS reduced-motion setting: no transforms, no transitions, no scroll easing. */
+@media (prefers-reduced-motion: reduce) {
+  /* Scroll reveals start hidden and are shown by script. This guarantees the
+     content is visible regardless of what the script does, so a reduced-motion
+     visitor can never be left looking at an empty section. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* The marquee holds still and simply shows the first sequence. The edge
+     fade goes too, so no logo is left half-faded in a static row. */
+  .marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .marquee {
+    mask-image: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }
